@@ -6,6 +6,7 @@ public class Connect4 {
 	private static final int HORIZONTAL = 8;
 	private static char[][] connect4 = new char[VERTICAL][HORIZONTAL];
 	private static int currentPlayer = 0;
+	private static int playPiecesUsed = 0;
 	
 	public static void main(String[] args) {
 		currentPlayer = 1;
@@ -33,9 +34,7 @@ public class Connect4 {
 			}
 			System.out.println("");
 			for(int j = 0; j < HORIZONTAL*2; j++) {
-				System.out.print("-");
 			}
-			System.out.println("");
 		}
 		System.out.println("1 2 3 4 5 6 7 8");
 	}
@@ -57,6 +56,7 @@ public class Connect4 {
 		for(int i = VERTICAL - 1; i >= 0; i--) {
 			if(connect4[i][number] == '.') {
 				connect4[i][number] = playPiece;
+				playPiecesUsed++;
 				checkMatrix(i, number, playPiece);
 				if(currentPlayer == 1) {
 					currentPlayer = 2;
@@ -71,7 +71,7 @@ public class Connect4 {
 		}
 		System.out.println("Kein Platz in der Spalte");
 	}
-	
+	@SuppressWarnings("Duplicates")
 	public static boolean checkRows(int i, int j, char toBeChecked) {
 		int count = 0;
 		//checking Horizontal line starting at the last position a piece was inserted into
@@ -85,8 +85,8 @@ public class Connect4 {
 				return true;
 			}
 		}
-		count--;	//to prevent nullpointer we start at the same location and have to subtract one
-		for(int b = j; b >= 0; b--) {
+		//count--;	//to prevent nullpointer we start at the same location and have to subtract one
+		for(int b = j-1; b >= 0; b--) {
 			if(connect4[i][b] == toBeChecked) {
 				count++;
 			} else {
@@ -98,7 +98,7 @@ public class Connect4 {
 		}
 		return false;
 	}
-	
+	@SuppressWarnings("Duplicates")
 	public static boolean checkColumns(int i, int j, char toBeChecked) {
 		int count = 0;	//resetting count
 		//checking Vertical line starting at the last position a piece was inserted into
@@ -112,8 +112,8 @@ public class Connect4 {
 				return true;
 			}
 		}
-		count--; 	//to prevent nullpointer we start at the same location and have to subtract one
-		for(int b = i; b >= 0; b--) {
+		//count--; 	//to prevent nullpointer we start at the same location and have to subtract one
+		for(int b = i-1; b >= 0; b--) {
 			if(connect4[b][j] == toBeChecked) {
 				count++;
 			}
@@ -140,8 +140,8 @@ public class Connect4 {
 				return true;
 			}
 		}
-		count--;	//to prevent nullpointer we start at the same location and have to subtract one
-		for(int a = i, b = j; a >= 0 && b < HORIZONTAL; a--, b++) {
+		//count--;	//to prevent nullpointer we start at the same location and have to subtract one
+		for(int a = i-1, b = j+1; a >= 0 && b < HORIZONTAL; a--, b++) {
 			if(connect4[a][b] == toBeChecked) {
 				count++;
 			} else {
@@ -167,8 +167,8 @@ public class Connect4 {
 				return true;
 			}
 		}
-		count--;	//to prevent nullpointer we start at the same location and have to subtract one
-		for(int a = i, b = j; a >= 0 && b >= 0; a--, b--) {
+		//count--;	//to prevent nullpointer we start at the same location and have to subtract one
+		for(int a = i-1, b = j-1; a >= 0 && b >= 0; a--, b--) {
 			if(connect4[a][b] == toBeChecked) {
 				count++;
 			} else {
@@ -186,6 +186,11 @@ public class Connect4 {
 				|| checkPositiveDiagonal(i, j, toBeChecked) || checkNegativeDiagonal(i, j, toBeChecked)) {
 			printMatrix();
 			System.out.println("Spieler " + currentPlayer + " hat das Spiel gewonnen.");
+			System.exit(0);
+		}
+		if(VERTICAL*HORIZONTAL == playPiecesUsed) {
+			printMatrix();
+			System.out.println("Unentschieden");
 			System.exit(0);
 		}
 	}
