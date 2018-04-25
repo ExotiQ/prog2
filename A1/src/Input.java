@@ -3,8 +3,11 @@ package aufgabe1;
 import java.io.IOException;
 
 public class Input {
+	
+	public Input() {
+	}
 
-	public static int read() {
+	public int read() {
 		while(true) {
 			try {
 				int row = System.in.read();

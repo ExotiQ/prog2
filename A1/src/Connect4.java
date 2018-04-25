@@ -1,45 +1,39 @@
 package aufgabe1;
 
 public class Connect4 {
+
+	private char[][] connect4;
+	private int currentPlayer = 0;
 	
-	private static final int VERTICAL = 8;
-	private static final int HORIZONTAL = 8;
-	private static char[][] connect4 = new char[VERTICAL][HORIZONTAL];
-	private static int currentPlayer = 0;
-	private static int playPiecesUsed = 0;
-	
-	public static void main(String[] args) {
-		currentPlayer = 1;
-		initiateMatrix();
-		while(true) {
-			int number = Input.read();
-			turn(number);
-			printMatrix();
-		}
+	public Connect4(int player, char[][] field) {
+		this.currentPlayer = player;
+		connect4 = field;
 	}
 	
-	public static void initiateMatrix() {
-		for(int i = 0; i < VERTICAL; i++) {
-			for(int j = 0; j < HORIZONTAL; j++) {
+	public void initiateMatrix() {
+		for(int i = 0; i < connect4.length; i++) {
+			for(int j = 0; j < connect4[0].length; j++) {
 				connect4[i][j] = '.';
 			}
 		}
 	}
 	
-	public static void printMatrix() {
-		for(int i = 0; i < VERTICAL; i++) {
-			for(int j = 0; j < HORIZONTAL; j++) {
+	public void printMatrix() {
+		for(int i = 0; i < connect4.length; i++) {
+			for(int j = 0; j < connect4[0].length; j++) {
 				System.out.print(connect4[i][j]);
 				System.out.print("|");
 			}
 			System.out.println("");
-			for(int j = 0; j < HORIZONTAL*2; j++) {
+			for(int j = 0; j < connect4[0].length*2; j++) {
+				System.out.print("-");
 			}
+			System.out.println("");
 		}
 		System.out.println("1 2 3 4 5 6 7 8");
 	}
 	
-	public static void turn(int number) {
+	public void turn(int number) {
 		number--;
 		char playPiece = '.';
 		switch(currentPlayer) {
@@ -53,10 +47,9 @@ public class Connect4 {
 				System.out.println("Spiel wurde noch nicht gestartet");
 				return;
 		}
-		for(int i = VERTICAL - 1; i >= 0; i--) {
+		for(int i = connect4.length - 1; i >= 0; i--) {
 			if(connect4[i][number] == '.') {
 				connect4[i][number] = playPiece;
-				playPiecesUsed++;
 				checkMatrix(i, number, playPiece);
 				if(currentPlayer == 1) {
 					currentPlayer = 2;
@@ -71,11 +64,11 @@ public class Connect4 {
 		}
 		System.out.println("Kein Platz in der Spalte");
 	}
-	@SuppressWarnings("Duplicates")
-	public static boolean checkRows(int i, int j, char toBeChecked) {
+	
+	public boolean checkRows(int i, int j, char toBeChecked) {
 		int count = 0;
-		//checking Horizontal line starting at the last position a piece was inserted into
-		for(int a = j; a < HORIZONTAL; a++) {
+		//checking connect4[0].length line starting at the last position a piece was inserted into
+		for(int a = j; a < connect4[0].length; a++) {
 			if(connect4[i][a] == toBeChecked) {
 				count++;
 			} else {
@@ -85,8 +78,8 @@ public class Connect4 {
 				return true;
 			}
 		}
-		//count--;	//to prevent nullpointer we start at the same location and have to subtract one
-		for(int b = j-1; b >= 0; b--) {
+		count--;	//to prevent nullpointer we start at the same location and have to subtract one
+		for(int b = j; b >= 0; b--) {
 			if(connect4[i][b] == toBeChecked) {
 				count++;
 			} else {
@@ -98,11 +91,11 @@ public class Connect4 {
 		}
 		return false;
 	}
-	@SuppressWarnings("Duplicates")
-	public static boolean checkColumns(int i, int j, char toBeChecked) {
+	
+	public boolean checkColumns(int i, int j, char toBeChecked) {
 		int count = 0;	//resetting count
-		//checking Vertical line starting at the last position a piece was inserted into
-		for(int a = i; a < VERTICAL; a++) {
+		//checking connect4.length line starting at the last position a piece was inserted into
+		for(int a = i; a < connect4.length; a++) {
 			if(connect4[a][j] == toBeChecked) {
 				count++;
 			} else {
@@ -112,8 +105,8 @@ public class Connect4 {
 				return true;
 			}
 		}
-		//count--; 	//to prevent nullpointer we start at the same location and have to subtract one
-		for(int b = i-1; b >= 0; b--) {
+		count--; 	//to prevent nullpointer we start at the same location and have to subtract one
+		for(int b = i; b >= 0; b--) {
 			if(connect4[b][j] == toBeChecked) {
 				count++;
 			}
@@ -127,10 +120,10 @@ public class Connect4 {
 		return false;
 	}
 	
-	public static boolean checkPositiveDiagonal(int i, int j, char toBeChecked) {
+	public boolean checkPositiveDiagonal(int i, int j, char toBeChecked) {
 		int count = 0;	//resetting count
 		//checking Diagonal (positive slope) line starting at the last position a piece was inserted into
-		for(int a = i, b = j; a < VERTICAL && b >= 0; a++, b--) {
+		for(int a = i, b = j; a < connect4.length && b >= 0; a++, b--) {
 			if(connect4[a][b] == toBeChecked) {
 				count++;
 			} else {
@@ -140,8 +133,8 @@ public class Connect4 {
 				return true;
 			}
 		}
-		//count--;	//to prevent nullpointer we start at the same location and have to subtract one
-		for(int a = i-1, b = j+1; a >= 0 && b < HORIZONTAL; a--, b++) {
+		count--;	//to prevent nullpointer we start at the same location and have to subtract one
+		for(int a = i, b = j; a >= 0 && b < connect4[0].length; a--, b++) {
 			if(connect4[a][b] == toBeChecked) {
 				count++;
 			} else {
@@ -154,10 +147,10 @@ public class Connect4 {
 		return false;
 	}
 	
-	public static boolean checkNegativeDiagonal(int i, int j, char toBeChecked) {
+	public boolean checkNegativeDiagonal(int i, int j, char toBeChecked) {
 		int count = 0;	//resetting count
 		//checking Diagonal (negative slope) line starting at the last position a piece was inserted into
-		for(int a = i, b = i; a < VERTICAL && b < HORIZONTAL; a++, b++) {
+		for(int a = i, b = i; a < connect4.length && b < connect4[0].length; a++, b++) {
 			if(connect4[a][b] == toBeChecked) {
 				count++;
 			} else {
@@ -167,8 +160,8 @@ public class Connect4 {
 				return true;
 			}
 		}
-		//count--;	//to prevent nullpointer we start at the same location and have to subtract one
-		for(int a = i-1, b = j-1; a >= 0 && b >= 0; a--, b--) {
+		count--;	//to prevent nullpointer we start at the same location and have to subtract one
+		for(int a = i, b = j; a >= 0 && b >= 0; a--, b--) {
 			if(connect4[a][b] == toBeChecked) {
 				count++;
 			} else {
@@ -181,16 +174,11 @@ public class Connect4 {
 		return false;
 	}
 	
-	public static void checkMatrix(int i, int j, char toBeChecked) { 
+	public void checkMatrix(int i, int j, char toBeChecked) { 
 		if(checkRows(i, j, toBeChecked) || checkColumns(i, j, toBeChecked) 
 				|| checkPositiveDiagonal(i, j, toBeChecked) || checkNegativeDiagonal(i, j, toBeChecked)) {
 			printMatrix();
 			System.out.println("Spieler " + currentPlayer + " hat das Spiel gewonnen.");
-			System.exit(0);
-		}
-		if(VERTICAL*HORIZONTAL == playPiecesUsed) {
-			printMatrix();
-			System.out.println("Unentschieden");
 			System.exit(0);
 		}
 	}
